@@ -16,7 +16,7 @@ module Basketball
       }
 
       PLAYER_SOURCE_URL = "https://stats.nba.com/stats/playerindex?College=&Country=&DraftPick=&DraftRound=&DraftYear=&Height="\
-                    "&Historical=1&LeagueID=00&Season=2020-21&SeasonType=Regular Season&TeamID=0&Weight="
+                          "&Historical=1&LeagueID=00&Season=2020-21&SeasonType=Regular Season&TeamID=0&Weight="
 
       LINEUP_SOURCE_URL = "https://stats.nba.com/stats/leaguedashlineups?Conference=&DateFrom=&DateTo=&Division=&GameID="\
                           "&GameSegment=&GroupQuantity=5&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0"\
@@ -85,7 +85,7 @@ module Basketball
         pts: lambda { |row| row[29] },
         plus_minus: lambda { |row| row[30] }
       }.with_indifferent_access
-      
+
       def self.player_map
         return @player_map if @player_map
 
