@@ -85,9 +85,7 @@ module Basketball
         pts: lambda { |row| row[29] },
         plus_minus: lambda { |row| row[30] }
       }.with_indifferent_access
-
-      ["LINEUP TYPE","MIN", "FGM", "FGA", "FG_PCT", "FG3M", "FG3A", "FG3_PCT", "FTM", "FTA", "FT_PCT", "OREB", "DREB", "REB", "AST", "TOV", "STL", "BLK", "BLKA", "PF", "PFD", "PTS", "PLUS_MINUS"]
-
+      
       def self.player_map
         return @player_map if @player_map
 
