@@ -46,10 +46,11 @@ module Basketball
       end
 
       def self.calculate_lineup_type(row)
-        lineup = row[2]
-        players = lineup.split(' - ').map { |player| normalize_name(player) }
-        positions = players.map { |player| player_map.dig(player, :position) }
-        positions.sort.join('-')
+        lineup_players(row).map { |player| player_map.dig(player, :position) }.sort.join('-')
+      end
+
+      def self.lineup_players(row)
+        row[2].split(' - ').map { |player| normalize_name(player) }
       end
 
       PLAYER_ROW_MAPPER = {
@@ -66,6 +67,11 @@ module Basketball
 
       LINEUP_ROW_MAPPER = {
         lineup_type: lambda { |row| calculate_lineup_type(row) },
+        p1: lambda { |row| lineup_players(row)[0] },
+        p2: lambda { |row| lineup_players(row)[1] },
+        p3: lambda { |row| lineup_players(row)[2] },
+        p4: lambda { |row| lineup_players(row)[3] },
+        p5: lambda { |row| lineup_players(row)[4] },
         min: lambda { |row| row[9] },
         fgm: lambda { |row| row[10] },
         fga: lambda { |row| row[11] },
