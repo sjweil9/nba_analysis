@@ -9,4 +9,4 @@ require_relative './gzip'
 GZIPPER = Basketball::Utils::Gzip
 NBA = Basketball::Utils::NBA
 
-BASE_FILEPATH = '/home/sjweil/Documents/Coding/basketball/nba_lineups'
+BASE_FILEPATH = '/home/sjweil/Documents/Coding/basketball/nba_analysis'

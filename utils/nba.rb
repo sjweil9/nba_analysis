@@ -1,3 +1,5 @@
+require_relative './nba/mappers'
+
 module Basketball
   module Utils
     class NBA
@@ -46,67 +48,34 @@ module Basketball
       end
 
       def self.calculate_lineup_type(row)
-        lineup_players(row).map { |player| player_map.dig(player, :position) }.sort.join('-')
+        lineup_players(row).map { |player| find_player(row[4], player)&.dig(:position) }.sort.join('-')
+      end
+
+      def self.find_player(team, normalized_name)
+        players.detect { |player| player[:team] == team && player[:normalized_name] == normalized_name }
       end
 
       def self.lineup_players(row)
         row[2].split(' - ').map { |player| normalize_name(player) }
       end
 
-      PLAYER_ROW_MAPPER = {
-        id: lambda { |row| row[0] },
-        last_name: lambda { |row| row[1].upcase },
-        first_name: lambda { |row| row[2].upcase },
-        name: lambda { |row| normalize_name([row[2], row[1]].join(' ')) },
-        team: lambda { |row| row[9] },
-        position: lambda { |row| row[11]&.delete('-') },
-        height: lambda { |row| row[12] },
-        weight: lambda { |row| row[13] },
-        draft_year: lambda { |row| row[16] },
-      }.with_indifferent_access
+      def self.players
+        return @players if @players
 
-      LINEUP_ROW_MAPPER = {
-        lineup_type: lambda { |row| calculate_lineup_type(row) },
-        p1: lambda { |row| lineup_players(row)[0] },
-        p2: lambda { |row| lineup_players(row)[1] },
-        p3: lambda { |row| lineup_players(row)[2] },
-        p4: lambda { |row| lineup_players(row)[3] },
-        p5: lambda { |row| lineup_players(row)[4] },
-        min: lambda { |row| row[9] },
-        fgm: lambda { |row| row[10] },
-        fga: lambda { |row| row[11] },
-        fg3m: lambda { |row| row[13] },
-        fg3a: lambda { |row| row[14] },
-        ftm: lambda { |row| row[16] },
-        fta: lambda { |row| row[17] },
-        oreb: lambda { |row| row[19] },
-        dreb: lambda { |row| row[20] },
-        ast: lambda { |row| row[22] },
-        tov: lambda { |row| row[23] },
-        stl: lambda { |row| row[24] },
-        blk: lambda { |row| row[25] },
-        blka: lambda { |row| row[26] },
-        pf: lambda { |row| row[27] },
-        pfd: lambda { |row| row[28] },
-        pts: lambda { |row| row[29] },
-        plus_minus: lambda { |row| row[30] }
-      }.with_indifferent_access
-
-      def self.player_map
-        return @player_map if @player_map
-
-        @player_map = {}
+        @players = []
         CSV.foreach(File.join(BASE_FILEPATH, 'data', 'nba_players.csv'), headers: true) do |row|
-          @player_map[row[3]] = {
+          @players << {
+            nba_id: row[0],
             team: row[4],
             position: row[5],
             height: row[6],
             weight: row[7],
-            draft_year: row[8]
+            draft_year: row[8],
+            normalized_name: row[3],
           }
         end
 
-        @player_map
+        @players
       end
     end
   end
